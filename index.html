@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Redirect Chain</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      background: #f7f7fb;
+      padding: 40px;
+      color: #222;
+    }
+    h1 { color: #111; }
+    .url { color: #0070f3; margin-top: 10px; word-break: break-all; }
+  </style>
+  <script>
+    // 🔗 Add your URLs here (up to 20)
+    const urls = [
+      "https://example1.com",
+      "https://example2.com",
+      "https://example3.com",
+      "https://example4.com",
+      "https://example5.com"
+      // ...add more
+    ];
+
+    const delay = 5000; // 5 seconds between redirects
+    let index = 0;
+
+    function redirectNext() {
+      if (index >= urls.length) {
+        document.body.innerHTML = "<h1>✅ All redirects completed!</h1>";
+        return;
+      }
+      const target = urls[index];
+      document.getElementById("current").textContent = target;
+      document.getElementById("count").textContent = `${index + 1} / ${urls.length}`;
+
+      let seconds = delay / 1000;
+      const timerEl = document.getElementById("timer");
+      timerEl.textContent = seconds;
+      const countdown = setInterval(() => {
+        seconds--;
+        if (seconds >= 0) timerEl.textContent = seconds;
+      }, 1000);
+
+      setTimeout(() => {
+        clearInterval(countdown);
+        window.location.href = target;
+        index++;
+        setTimeout(redirectNext, delay);
+      }, delay);
+    }
+
+    window.onload = redirectNext;
+  </script>
+</head>
+<body>
+  <h1>Redirecting through multiple URLs…</h1>
+  <p><strong>Redirect:</strong> <span id="count">0 / 20</span></p>
+  <p>Next URL:</p>
+  <p class="url" id="current"></p>
+  <p>Redirecting in <span id="timer">5</span> seconds…</p>
+</body>
+</html>
